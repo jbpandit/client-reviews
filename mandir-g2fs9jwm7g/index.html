@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Mandir - design for review</title>
+<script>self.ModelViewerElement = { meshoptDecoderLocation: "meshopt_decoder.js" };</script>
+<script type="module" src="model-viewer.min.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: #f4f2ee; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #2b2a28; }
+  model-viewer { position: fixed; inset: 0; width: 100%; height: 100%; background: #f4f2ee;
+    --poster-color: transparent; --progress-bar-color: #b08a3c; }
+  .title { position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 16px; right: 16px; pointer-events: none; z-index: 2; }
+  .title h1 { margin: 0; font-size: 17px; font-weight: 600; letter-spacing: .2px; }
+  .title p { margin: 3px 0 0; font-size: 13px; color: #6b665e; }
+  .bar { position: fixed; left: 0; right: 0; bottom: calc(18px + env(safe-area-inset-bottom)); display: flex;
+    justify-content: center; gap: 12px; z-index: 3; pointer-events: none; }
+  .btn { pointer-events: auto; appearance: none; border: 1px solid #d6d1c7; background: #fff; color: #2b2a28;
+    font: 600 15px/1 inherit; font-family: inherit; padding: 12px 20px; border-radius: 22px; min-width: 92px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .btn[aria-pressed="true"] { background: #2b2a28; color: #fff; border-color: #2b2a28; }
+  #ar { display: none; }
+  model-viewer[ar-status] #ar, model-viewer #ar.can-ar { display: inline-block; }
+  .hint { position: fixed; left: 0; right: 0; bottom: calc(72px + env(safe-area-inset-bottom)); text-align: center;
+    font-size: 12px; color: #8a857c; pointer-events: none; z-index: 2; transition: opacity .6s; }
+  /* dimension callouts */
+  .dot { display: none; }
+  .dim { display: none; width: 0; height: 0; position: relative; pointer-events: none; }
+  .dim .tag { position: absolute; left: 10px; top: 0; transform: translateY(-50%); background: rgba(255,255,255,.96);
+    border: 1px solid #b08a3c; border-radius: 6px; color: #2b2a28; font-size: 12.5px; font-weight: 600; line-height: 1.25;
+    padding: 4px 7px; white-space: nowrap; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  .dim.in-left .tag { left: auto; right: 10px; }
+  .dim.below .tag { left: 0; top: 10px; transform: translateX(-50%); }
+  .dim small { display: block; font-size: 11px; font-weight: 500; color: #6b665e; }
+  .dim b { display: block; font-weight: 600; font-size: 14px; }
+  .dim .k { display: block; font-size: 10.5px; font-weight: 600; color: #8a6a28; text-transform: uppercase; letter-spacing: .3px; }
+  model-viewer.sizes ~ .hint { opacity: 0 !important; }
+  #dimLines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+  #dimLines line { stroke: #b08a3c; stroke-width: 1.6; }
+  .dim.in-left { transform: translate(calc(-100% - 10px), -50%); }
+  .dim.below { transform: translate(-50%, 10px); }
+  model-viewer.sizes ~ .hint { opacity: 0 !important; }
+  model-viewer.sizes .dim, model-viewer.sizes #dimLines { display: block; }
+</style>
+</head>
+<body>
+<model-viewer id="mv" src="mandir.glb" ios-src="mandir.usdz" alt="3D model of the mandir design"
+  camera-controls touch-action="pan-y" disable-pan interaction-prompt="none"
+  camera-orbit="30deg 76deg auto" min-camera-orbit="auto 15deg auto" max-camera-orbit="auto 100deg 12m"
+  field-of-view="30deg" camera-target="0m 0.70m -0.24m" shadow-intensity="1" shadow-softness="1" exposure="0.75" tone-mapping="commerce" environment-image="legacy"
+  ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor">
+
+  <!-- line end points (metres, model space: x width, y up, z toward viewer) -->
+  <div class="dot" slot="hotspot-L0"  data-position="-0.665 0 0.02"></div>
+  <div class="dot" slot="hotspot-L18" data-position="-0.665 0.4572 0.02"></div>
+  <div class="dot" slot="hotspot-L60" data-position="-0.665 1.524 0.02"></div>
+  <div class="dot" slot="hotspot-R0"  data-position="0.665 0 0.02"></div>
+  <div class="dot" slot="hotspot-R60" data-position="0.665 1.524 0.02"></div>
+  <div class="dot" slot="hotspot-WL"  data-position="-0.6096 -0.03 0.11"></div>
+  <div class="dot" slot="hotspot-WR"  data-position="0.6096 -0.03 0.11"></div>
+  <div class="dot" slot="hotspot-L18a" data-position="-0.61 0.4572 0.02"></div>
+
+  <!-- labels -->
+  <div class="dim" slot="hotspot-base" data-position="-0.665 0.2286 0.02"><div class="tag"><span class="k">Base</span><b>18 in</b><small>(45.7 cm)</small></div></div>
+  <div class="dim" slot="hotspot-shrine" data-position="-0.665 0.9906 0.02"><div class="tag"><span class="k">Shrine base to top</span><b>42 in</b><small>(106.7 cm)</small></div></div>
+  <div class="dim in-left" slot="hotspot-height" data-position="0.665 0.762 0.02"><div class="tag"><span class="k">Overall height</span><b>60 in</b><small>(152.4 cm)</small></div></div>
+  <div class="dim below" slot="hotspot-width" data-position="0 -0.03 0.11"><div class="tag"><span class="k">Overall width</span><b>48 in</b><small>(121.9 cm)</small></div></div>
+
+  <svg id="dimLines" xmlns="http://www.w3.org/2000/svg">
+    <line id="lnL"/><line id="lnR"/><line id="lnW"/>
+    <line id="tL0"/><line id="tL18"/><line id="tL60"/><line id="tR0"/><line id="tR60"/><line id="tWL"/><line id="tWR"/>
+    <line id="lnDeck"/>
+  </svg>
+
+  <button slot="ar-button" id="ar" class="btn" style="position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));right:16px;z-index:3">AR</button>
+</model-viewer>
+
+<div class="title"><h1>Mandir - design for review</h1><p>48 W x 22 D x 60 H in</p></div>
+<div class="hint" id="hint">Drag to spin &middot; pinch to zoom</div>
+<div class="bar"><button class="btn" id="sizes" aria-pressed="false">Sizes</button><span id="arSpacer" style="display:none;width:92px"></span></div>
+
+<script type="module">
+  const mv = document.getElementById('mv');
+  // wide screens are height-limited: step back a little so the size labels fit
+  if (innerWidth / innerHeight > 0.75) mv.cameraOrbit = '30deg 76deg 4.7m';
+  const sizesBtn = document.getElementById('sizes');
+  const P = (name) => mv.queryHotspot('hotspot-' + name);
+  const setLine = (id, a, b) => {
+    const el = document.getElementById(id);
+    if (!a || !b) return;
+    el.setAttribute('x1', a.x); el.setAttribute('y1', a.y); el.setAttribute('x2', b.x); el.setAttribute('y2', b.y);
+  };
+  // short tick perpendicular to direction (dx,dy) at point p
+  const tick = (id, p, dir, len = 7) => {
+    if (!p) return;
+    const n = Math.hypot(dir.x, dir.y) || 1, nx = -dir.y / n * len, ny = dir.x / n * len;
+    setLine(id, {x: p.x - nx, y: p.y - ny}, {x: p.x + nx, y: p.y + ny});
+  };
+  function draw() {
+    if (!mv.classList.contains('sizes')) return;
+    const c = (n) => { const h = P(n); return h && h.canvasPosition; };
+    const L0 = c('L0'), L18 = c('L18'), L60 = c('L60'), R0 = c('R0'), R60 = c('R60'), WL = c('WL'), WR = c('WR'), D = c('L18a');
+    if (!L0) return;
+    setLine('lnL', L0, L60); setLine('lnR', R0, R60); setLine('lnW', WL, WR);
+    const v = {x: L60.x - L0.x, y: L60.y - L0.y}, vr = {x: R60.x - R0.x, y: R60.y - R0.y}, h = {x: WR.x - WL.x, y: WR.y - WL.y};
+    tick('tL0', L0, v); tick('tL18', L18, v); tick('tL60', L60, v); tick('tR0', R0, vr); tick('tR60', R60, vr);
+    tick('tWL', WL, h); tick('tWR', WR, h);
+    setLine('lnDeck', L18, D);
+  }
+  mv.addEventListener('camera-change', draw);
+  mv.addEventListener('load', draw);
+  window.addEventListener('resize', () => requestAnimationFrame(draw));
+  sizesBtn.addEventListener('click', () => {
+    const on = !mv.classList.contains('sizes');
+    mv.classList.toggle('sizes', on);
+    sizesBtn.setAttribute('aria-pressed', on);
+    requestAnimationFrame(draw);
+  });
+  mv.addEventListener('load', () => {
+    if (mv.canActivateAR) document.getElementById('ar').classList.add('can-ar');
+  });
+  mv.addEventListener('camera-change', (e) => {
+    if (e.detail.source === 'user-interaction') document.getElementById('hint').style.opacity = 0;
+  }, {once: false});
+</script>
+</body>
+</html>
